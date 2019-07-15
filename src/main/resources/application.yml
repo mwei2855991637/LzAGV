@@ -1,0 +1,46 @@
+spring:
+  mvc:
+    static-path-pattern: /static/**
+  devtools:
+    restart:
+      enabled: true
+      additional-paths:
+      - src/main/java/com/lc/controller
+      - src/main/java/com/lc/dao
+      - src/main/java/com/lc/service
+  jpa:
+    show-sql: true
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      show_sql: false
+      format_sql: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/LzAGV?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123123
+    tomcat:
+      max-active: 20
+      max-idle: 8
+      min-idle: 8
+      initial-size: 10
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    cache: false
+    servlet:
+      content-type: text/html; charset=utf-8
+server:
+  port: 8080
+  connection-timeout: 5000
+  servlet:
+    session:
+      timeout: 60
+  tomcat:
+    max-threads: 150
+    uri-encoding: UTF-8

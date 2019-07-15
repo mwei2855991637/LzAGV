@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><title>发送邮箱
+</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="/static/js/bootstrap-3.3.7-dist/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/js/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/common.css" />
+    <script src="/static/js/layui/layui.js"></script>
+    	<script src="/static/js/alertPopShow.js"></script>
+    <style type="text/css">
+        .iconfont{
+            font-size: 50px;
+        }
+        .layui-input-inline{
+            padding-right: 25px;
+        }
+		.button-info{
+			padding-right: 25px;
+		}
+		#info{
+			text-align: center;
+		}
+    </style>
+</head>
+<body style="background-color: #D9EDF7 ;">
+<div class="content-box role" style="padding-top: 40px;">
+    <div class="content-box-content">
+        <div class="tab-content default-tab" id="form">
+            <div>
+				<form class="layui-form layui-form-pane" action="/sendEmail" method="post" onsubmit="send()">
+					<div class="layui-form-item" style="width: 100%">
+						<div class="layui-form-item" style="padding-left: 40px">
+							
+							<div class="layui-form-item">
+								<label class="layui-form-label"  style="width:130px;">收件人：</label>
+								<div class="layui-input-inline">
+									<input type="text" class="layui-input" name="name" readonly="readonly" value="乐创信息通讯技术有限公司">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label"  style="width:130px;">标题：</label>
+								<div class="layui-input-inline">
+									<input type="text" class="layui-input" name="title">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label"  style="width:130px;">问题描述：</label>
+								<div class="layui-input-inline">
+									<textarea name="context" style="width:187px;height:100px"></textarea>
+								</div>
+							</div>
+							<div class="layui-form-item" id="info">
+								<div class="layui-input-inline"  style="width:131px;">
+									<input type="submit" class="layui-input" value="发送">
+								</div>
+							</div>
+						</div></div>
+				</form>
+					</div>
+            </div></div></div>
+</body>
+<script>
+function send(){
+	webToast("邮件正在发送，请稍等。。。","middle",4000);
+	return true;
+}
+	window.onload = function(){
+		var flag=[[${flag}]]
+		if(flag==1){
+			alert("邮件发送成功！");
+		}
+		if(flag==-1){
+			alert("邮件发送失败！（请保持网络畅通，收件人地址是否有误！）");
+		}
+    }
+</script>
+</html>

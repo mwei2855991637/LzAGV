@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="/static/js/layui/css/layui.css">
+<script src="/static/js/layui/layui.js"></script>
+<style type="text/css">
+.iconfont {
+	font-size: 50px;
+}
+
+.layui-input-inline {
+	padding-right: 25px;
+}
+
+.button-info {
+	padding-right: 25px;
+}
+
+#info {
+	text-align: center;
+}
+</style>
+</head>
+<div th:if="${product} == -1">
+	<span>无该货物记录</span>
+</div>
+<div th:if="${product} != -1">
+<body style="padding-top: 30px;">
+
+		<div class="content-box role"
+			style="padding-top: 40px; background-color: whitesmoke;">
+			<div class="content-box-content">
+				<div class="tab-content default-tab" id="form">
+					<div>
+
+						<form class="layui-form layui-form-pane" action="carDetail_Update"
+							name="form1" onsubmit="return check();">
+							<div class="layui-form-item" style="width: 100%">
+								<div class="layui-form-item" style="padding-left: 40px">
+									<div class="layui-form-item">
+										<label class="layui-form-label"
+											style="width: 632px; color: red;"><span
+											th:text="${carId}"></span>号车 货物状态信息</label>
+									</div>
+
+									<div class="layui-form-item">
+										<label class="layui-form-label">货物名称：</label>
+										<div class="layui-input-inline">
+											<input type="text" id="sendDate" name="sendDate"
+												readonly="readonly" class="layui-input"
+												th:field="${product.name}">
+										</div>
+										<label class="layui-form-label">货物数量：</label>
+										<div class="layui-input-inline">
+											<input type="text" class="layui-input" readonly="readonly"
+												th:field="${product.num}">
+										</div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">货物详情：</label>
+										<div class="layui-input-inline">
+											<input type="text" class="layui-input" readonly="readonly"
+												th:field="${product.desc}">
+
+										</div>
+										<label class="layui-form-label">货物状态：</label>
+										<div class="layui-input-inline">
+											<input type="text" class="layui-input" readonly="readonly"
+												th:field="${product.status}">
+
+										</div>
+									</div>
+									<div class="layui-form-item" style="height:30px;">
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+</div>
+</html>

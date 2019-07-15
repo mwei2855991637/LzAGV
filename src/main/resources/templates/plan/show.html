@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Java后端WebSocket的Tomcat实现</title>
+<script type="text/javascript" src="/static/js/ws.js"></script>
+<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="/static/js/echarts.js"></script>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	font-family: 'Microsoft YaHei'
+}
+
+.info {
+	text-align: center;
+	margin: 5px 0;
+	border: 1px solid #2db7f5;
+	background-color: #F1FAFF;
+}
+
+ul {
+	list-style: none;
+	display: inline-block;
+	font-size: 15px;
+	height: 30px;
+	line-height: 30px;
+	border-top: 0px;
+}
+
+ul li {
+	display: block;
+	float: left;
+	text-align: center;
+	padding: 0 10px;
+	width: 120px;
+}
+#left,#right{float:left;}
+#right {
+	text-align: center;
+	margin: 5px 0;
+	border: 1px solid #2db7f5;
+	background-color: #F1FAFF;
+}
+/*.th{ background:#F1FADE; font-weight:bold; border-top:1px }*/
+</style>
+</head>
+<body>
+	<div>
+		<div class='_outer' id="left" style="width:100%">
+			<div class="info">
+				<ul>
+					<li>小车型号</li>
+					<li>数量</li>
+					<li>起点</li>
+					<li>终点</li>
+					<li style="width:300px;">开始时间</li>
+					<li>货物信息</li>
+				</ul>
+				<a style="padding-bottom:20px;text-align: center;" href="/plan/dateExcle">
+				<img src="/static/img/excel.png" style="padding-top:5px;width: 30px;height: 30px;" />
+				</a>
+			</div>
+		</div> 
+	</div>
+</body>
+
+<script type="text/javascript">
+function product(id,carid){
+	///product?id='+info[1]+'&carId='+info[i-1]+'
+	//alert("ceshi");
+	window.parent.main(id,carid);
+}
+	$(function() {
+		ws.onmessage = function(msg) {
+			// 用正则判断是否是纯数字
+			console.log("接收msg："+msg.data);
+			var ex = /^\d+$/;
+			var info = msg.data;
+			console.log(!ex.test(info) + " | " + info)
+			if (!ex.test(info)) { // 添加记录
+				info = JSON.parse(info);
+				var html = '<div id="' + info[0] + '" class="info"><ul>';
+				for (var i = 1; i < info.length - 2; i++) {
+					if(i==(info.length - 3)){
+						html += '<li  style="width:300px;">' + info[i] + '</li>';
+						html += '<li><a href="javascript:void(0);" onclick="product('+info[1]+','+info[i-1]+')"> 查看货物 </a></li>';
+					}
+					else if(i!=(info.length - 4)){
+						html += '<li>' + info[i] + '</li>';
+					}
+					
+				}
+				html += '</ul><div>';
+				$('._outer').append(html);
+			} else { // 删除对应记录
+				$('#' + info).remove();
+			}
+		}
+		//关闭WebSocket连接
+		function closeWebSocket() {
+			ws.close();
+		}
+		ws.connect("/localhost:8080/websocket");// 后台接口地址
+	})
+	
+</script>
+</html>

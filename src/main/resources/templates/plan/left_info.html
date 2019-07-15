@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><title>
+当前车辆信息
+</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="/static/js/bootstrap-3.3.7-dist/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/js/layui/css/layui.css">
+    <script src="/static/js/layui/layui.js"></script>
+    <style type="text/css">
+        .iconfont{
+            font-size: 50px;
+        }
+        .layui-input-inline{
+            padding-right: 25px;
+        }
+		.button-info{
+			padding-right: 25px;
+		}
+		#info{
+			text-align: center;
+		}
+    </style>
+</head>
+<body style="background-color: #D9EDF7 ;">
+<div class="content-box role" style="padding-top: 40px;">
+    <div class="content-box-content">
+        <div class="tab-content default-tab" id="form">
+            <div>
+				<div th:if="${carStatus} eq '-1'"  style="text-align: center;color: red;font-size: 30px;">
+					<span>无车辆信息</span>
+				</div>
+				<div th:if="${carStatus} ne '-1'">
+			
+				<form class="layui-form layui-form-pane" action="" name="form1">
+					<div class="layui-form-item" style="width: 100%">
+						<div class="layui-form-item" style="padding-left: 40px">
+							<div class="layui-form-item">
+								<input type="hidden" id="infoId" name="infoId" th:field="${carStatus.id}"/>
+								<label class="layui-form-label" style="width: 632px;color: red;"><span th:text="${carStatus.carid}"></span>号车 车辆状态信息</label>
+							</div>
+							
+							<div class="layui-form-item">
+								<label class="layui-form-label">车辆状态：</label>
+								<div class="layui-input-inline">
+									<input type="text" id="sendDate" name="sendDate" class="layui-input" th:field="${carStatus.status}">
+								</div>
+								<label class="layui-form-label">故障情况：</label>
+								<div class="layui-input-inline">
+									<input type="text" class="layui-input" th:field="${carStatus.fault}">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">车辆路线：</label>
+								<div class="layui-input-inline">
+									<input type="text" class="layui-input" th:field="${carStatus.road}">
+								</div>
+								<label class="layui-form-label">当前位置：</label>
+								<div class="layui-input-inline">
+									<input type="text" class="layui-input"  th:field="${carStatus.curplace}">
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">当前电量：</label>
+								<div class="layui-input-inline">
+									<input type="text" class="layui-input"  th:field="${carStatus.electric}">
+								</div>
+								<label class="layui-form-label">行驶效率：</label>
+								<div class="layui-input-inline">
+									<input type="text" class="layui-input"  th:field="${carStatus.speed}">
+								</div>
+							</div>
+							<div class="layui-form-item" id="info">
+								
+								<div class="layui-input-inline" style="padding-left: 100px;">
+									<label class="layui-form-label" style="width: 200px;color: red;"><a onclick="cargo()">查看货物信息</a></label>
+								</div>
+								<div class="layui-input-inline" style="padding-left: 10px;">
+									<label class="layui-form-label" style="width: 200px;color: red;"><span th:if="${carStatus.status} ne '故障'"><a>无需人工处理</a></span><span th:if="${carStatus.status} ne '正常'"><a onclick="dispose()" style="color:red">派遣人工处理</a></span></label>
+								</div>
+							</div>
+						</div></div>
+				</form>
+					</div>
+            </div></div></div></div>
+	<script>
+	window.onload = function(){
+		var status=[[${status}]];
+		if(status==1){
+			alert("人工处理成功！");
+		}
+    }
+	function cargo(){
+			var id=$("#infoId").val();
+			window.open('/cargo?id='+id, '', 'height=357, width=750, top=200, left=350, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+		}
+		function dispose(){
+			var bid=$("#infoId").val();
+			window.location.href ="/plan/socketMsg?bid="+bid+"&status=1"
+		}
+	</script>
+</body>
+</html>

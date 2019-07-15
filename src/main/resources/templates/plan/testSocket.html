@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>模拟发送故障数据</title>
+</head>
+<body>
+	<h2>模拟发送故障数据</h2>
+	<form action="/plan/socketMsg" method="post">
+		车辆编号:<input type="text" name="bid" value="2">
+		<input type="submit" value="发送指令">
+	</form>
+	
+	<h2>模拟库存已满信息</h2>
+	<form action="/plan/storageMsg" method="post">
+		库存编号:<input type="text" name="bid" value="1">
+		<input type="hidden" name="status" value="-1">
+		<input type="submit" value="发送指令">
+	</form>
+	
+	<h2>模拟小车到达库位信息</h2>
+	<form action="/plan/storageMsg" method="post">
+			  <input type="hidden" name="status" value="1">
+		库位编号:<input type="text" name="id" value="1">
+		<input type="submit" value="发送指令">
+	</form>
+	
+	<h2>模拟小车到站</h2>
+	<form action="/plan/storageAuto" method="post">
+		到站指令:<input type="text" name="status" value="1">
+		<input type="submit" value="发送指令">
+	</form>
+	
+<!-- <form action="/plan/socket" method="post">
+		产品型号:<input type="text" name="product" value="123">
+		数量:<input type="text" name="quantity" value="14">
+		起点:<input type="text" name="startPlace" value="p1">
+		终点:<input type="text" name="endPlace" value="p2">
+		运载小车:<input type="text" name="carNum" value="10">
+		<input type="submit" value="提交">
+	</form> -->
+</body>
+</html>

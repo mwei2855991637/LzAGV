@@ -1,0 +1,16 @@
+@charset "UTF-8";
+/* rem */
+
+.web_toast{
+    position: fixed;
+	margin: 0 10px;
+    z-index: 9999;
+    display: none;
+    display: block;
+    padding: 10px;
+    color: #FFFFFF;
+    background: rgba(0, 0, 0, 0.7);
+    font-size: 2.0rem;
+    text-align: center;
+    border-radius: 4px;
+}

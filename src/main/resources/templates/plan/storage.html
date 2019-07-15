@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>库位信息显示</title>
+		  <!-- 新 Bootstrap4 核心 CSS 文件 -->
+		<link rel="stylesheet" href="/static/js/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/static/css/common.css" />
+		 <style>
+			 button{
+				 width: 55px;
+				 height: 60px;
+				 background-color: #F7F7F7;
+			 }
+			 .status-right{
+				 width: 200px;
+				 height: 200px;
+			 }
+			 .green{
+				 background-color: #00FF00;
+			 }
+			 .red{
+			 	background-color: #F1252E;
+			 }
+			 .yellow{
+			 	background-color: yellow;
+			 }
+			 .storage-two{
+				 width: 100px;
+				 height: 100px;
+			 }
+			 .tab-menu{
+				margin-top: 20px;
+				height: 26px;
+				overflow: hidden;
+				position: relative;
+				border-radius: 20px;
+			}
+			ul{
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+			li{
+				height: 24px;
+				line-height: 24px;
+				float: left;
+				text-align: center;
+				position: relative;
+				font-size: 12px;
+			}
+			.tab-menu span{
+				margin: 4px;
+				display: inline-block;
+				height: 18px;
+				position: absolute;
+				left: 0;
+				top: 0;
+				border-radius: 20px;
+				transition: left .4s;
+				-webkit-transition: left .4s;
+				-moz-transition: left .4s;
+			}
+			li:hover{
+				cursor: pointer;
+			}
+			.tworow{
+				width: 160px;
+				background-color: rgba(224, 229, 232, 1);
+			}
+			.tworow span{
+				width: 72px;
+				background-color: rgba(0, 54, 80, 1);
+			}
+			.tworow .active{
+				color: white;
+			}
+			.tworow li{
+				width: 80px;
+				color:rgba(0, 54, 80, 1);
+			}
+		 </style>
+		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+		<script src="/static/js/bootstrap-3.3.7-dist/jquery/jquery.min.js"></script>
+		<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+		<script src="/static/js/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+		
+		
+		<script type="text/javascript" src="/static/js/excanvas.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.easy-pie-chart1.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="/static/css/jquery.easy-pie-chart.css" media="screen">
+		<script type="text/javascript" src="/static/js/ws.js"></script>
+		<script src="/static/js/slide.js"></script>
+		<script src="/static/js/alertPopShow.js"></script>
+		<script type="text/javascript">
+			/* 初始化饼图服务器资源统计 */
+		var initPieChart = function() {
+			$('.percentage').easyPieChart({
+				animate: 1000
+			});
+			$('.percentage-light').easyPieChart({
+				barColor: function(percent) {
+					percent /= 100;
+					return "rgb(" + Math.round(255 * (1-percent)) + ", " + Math.round(255 * percent) + ", 0)";
+				},
+				trackColor: '#666',
+				scaleColor: false,
+				lineCap: 'butt',
+				lineWidth: 15,
+				animate: 1000
+			});
+		
+			$('.updateEasyPieChart').on('click', function(e) {
+				e.preventDefault();
+				$('.percentage, .percentage-light').each(function() {
+				var newValue = Math.round(100*Math.random());
+				$(this).data('easyPieChart').update(newValue);
+				$('span', this).text(newValue);
+				});
+			});
+		};
+		</script>
+		<!-- 禁止图片拖拽 -->
+		<script language="javascript">  
+			function imgdragstart(){return false;}  
+		</script> 
+	</head>
+	<body>
+		<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<p class="text-success lead text-center">
+				 <strong>库位信息显示</strong><button style="width: 40px;height: 20px;" class="green"></button>库存未满
+												<button style="width: 40px;height: 20px;" class="red"></button>库存已满
+			</p>
+			<div class="tab-menu tworow">
+    			<span id="thirdbg"></span>
+			    <ul id="automation">
+			        <li id="status1" value="1" onclick="updateStatus(1)">手动</li>
+			        <li id="status2" value="2" onclick="updateStatus(2)">自动</li>
+			    </ul>
+			</div>
+		</div>
+	</div>
+	<div class="row clearfix" style="background-color: #E9E7E7 ;">
+		<div class="col-md-4 column">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td colspan="4" class="text-success lead text-center">
+							生产线库位
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button class="green" id="stoNo1" onclick="dispatch(1)">1</button>
+						</td>
+						<td>
+							<button class="green" id="stoNo2" onclick="dispatch(2)">2</button>
+						</td>
+						<td>
+							<button class="green" id="stoNo3" onclick="dispatch(3)">3</button>
+						</td>
+						<td>
+							<button class="green" id="stoNo4" onclick="dispatch(4)">4</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button class="green" id="stoNo5" onclick="dispatch(5)">5</button>
+						</td>
+						<td>
+							<button class="green" id="stoNo6" onclick="dispatch(6)">6</button>
+						</td>
+						<td>
+							<button class="green" id="stoNo7" onclick="dispatch(7)">7</button>
+						</td>
+						<td>
+							<button  class="green" id="stoNo8" onclick="dispatch(8)">8</button>
+						</td>
+					
+					</tr>
+					<tr>
+						<td>
+							<button  class="green" id="stoNo9" onclick="dispatch(9)">9</button>
+						</td>
+						<td>
+							<button  class="green" id="stoNo10" onclick="dispatch(10)">10</button>
+						</td>
+						<td>
+							<button  class="green" id="stoNo11" onclick="dispatch(11)">11</button>
+						</td>
+						<td>
+							<button  class="green" id="stoNo12" onclick="dispatch(12)">12</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button  class="green" id="stoNo13" onclick="dispatch(13)">13</button>
+						</td>
+						<td>
+							<button  class="green" id="stoNo14" onclick="dispatch(14)">14</button>
+						</td>
+						<td>
+							<button  class="green" id="stoNo15" onclick="dispatch(15)">15</button>
+						</td>
+						<td>
+							<button  class="green" id="stoNo16" onclick="dispatch(16)">16</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-4 column">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td colspan="3" class="text-success lead text-center">
+							浸漆线库位
+						</td>
+					</tr>
+					<tr  class="text-center">
+						<td>
+							<button class="green storage-two" id="stoNo17" onclick="dispatch(17)">1</button>
+						</td>
+						<td>
+							<button class="red storage-two" id="stoNo18" onclick="dispatch(18)">2</button>
+						</td>
+					</tr>
+					<tr class="text-center">
+						<td>
+							<button class="green storage-two" id="stoNo19" onclick="dispatch(19)">3</button>
+						</td>
+						<td>
+							<button class="red storage-two" id="stoNo20" onclick="dispatch(20)">4</button>
+						</td>
+						
+					</tr>
+				</tbody>
+			</table>
+			
+		</div>
+		<div class="col-md-4 column">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td colspan="3" class="text-success lead text-center">
+							暂存区库位
+						</td>
+					</tr>
+					<tr>
+						<td class="text-center">
+							<button class="status-right" onclick="dispatch(21)">
+								<div class="chart" style="padding-left: 12px;">
+									<div class="percentage-light" data-percent="70"  id="stoNo21">剩余<span style="color: red;">70%</span>空间</div>
+								</div>
+								<span style="color: red;">暂存区</span>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+	<script>
+	function AjaxDispatch(id,msg){
+		 $.ajax({
+             type: "POST",//方法类型 
+             dataType: "json",//预期服务器返回的数据类型
+             url: "/plan/storageAuto" ,//url
+             data: {storageNum:id},
+             success: function (result) {
+            	 webToast(msg,"middle",1000);
+             },
+             error : function(error) {
+                console.log("响应服务器错误");
+             }
+         });
+	}
+	function dispatch(id){
+		if(id<=16){
+			//生成线库位
+			var but="#stoNo"+id;
+			var currColor=$(but).is('.green');
+			if(currColor){
+				if(confirm("该库位货物未存在货物，是否强制派遣车辆?")){
+					 　　//点击确定后操作
+					   AjaxDispatch(id,"强制派遣车辆成功，请等待...");
+					}
+			}else{
+				AjaxDispatch(id,"已成功派遣车辆，请等待...");
+			}
+		}else if(id>=17&&id<=20){
+			//浸漆线库位
+			var but="#stoNo"+id;
+			var currColor=$(but).is('.green');
+			if(currColor){
+				if(confirm("该浸漆线未存在货物，是否强制派遣车辆?")){
+					 　　//点击确定后操作
+					   AjaxDispatch(id,"强制派遣车辆成功，请等待...");
+					}
+			}else if(confirm("该库位为浸漆线，请确保货物冷却已满24H?")){
+				 　　//点击确定后操作
+				AjaxDispatch(id,"已成功派遣车辆，请等待...");
+				}
+		}else{//暂存区
+			AjaxDispatch(id,"已成功派遣车辆前往暂存区，请等待...");
+		}
+		
+	}
+ 	window.onload = function(){
+ 		 $.ajax({
+             type: "POST",//方法类型 
+             dataType: "json",//预期服务器返回的数据类型
+             url: "/plan/storage" ,//url
+             data: {},
+             success: function (result) {
+            	 //console.log("result:"+result+"\tOne:"+result.StorageNumOne+"\tTwo:"+result.StorageNumTwo);
+            	//运输还剩余一次（黄色）
+            	 if(result.StorageNumOne!=null){
+            		 var numArr1 = result.StorageNumOne.match(/\d+/g);
+                	 for(var i=0;i<numArr1.length;i++){
+                		 var bu_nId="#stoNo"+numArr1[i];
+         				 $(bu_nId).attr("class","yellow");
+                	 }
+            	 }
+            	 //运输还剩余两次（红色）
+            	 if(result.StorageNumTwo!=null){
+            		 var numArr2 = result.StorageNumTwo.match(/\d+/g);
+                	 for(var i=0;i<numArr2.length;i++){
+                		 var bu_nId="#stoNo"+numArr2[i];
+         				 $(bu_nId).attr("class","red");
+                	 }
+            	 } 
+             },
+             error : function(error) {
+                console.log("响应服务器错误");
+             }
+         });	
+ 		
+		var status=[[${currStatus}]];
+		initPieChart();
+		if(status==1){
+			$("#status2").addClass("active");
+			$("#status1").removeClass("active");
+			$("#thirdbg").attr("style","left:80px");
+		}else{
+			$("#status1").addClass("active");
+			$("#status2").removeClass("active");
+			$("#thirdbg").attr("style","left:0px");
+		}
+    }
+	new Slideicon($("#automation"),{
+		index:0,
+		cover:$("#thirdbg"),
+		callback:function (data) {
+			console.log(data)
+		}
+	});
+	function updateStatus(statusId){
+		 $.ajax({
+             type: "POST",//方法类型 
+             dataType: "json",//预期服务器返回的数据类型
+             url: "/updateStatus" ,//url
+             data: {status:statusId},
+             success: function (result) {
+            	 setTimeout(function(){alert("切换状态成功！")},500);
+             },
+             error : function(error) {
+                console.log("响应服务器错误");
+             }
+         });
+	}
+	</script>
+	<script type="text/javascript">
+	$(function() {
+		ws.onmessage = function(msg) {
+			console.log("接收msg："+msg.data);
+			var info = msg.data;
+			if (info.indexOf("oNo")>=0) {//库存为空
+				var bu_nId="#st"+info;
+				$(bu_nId).attr("class","green");
+			}else if(info.indexOf("count")>=0){//第二次运输
+				var numArr = info.match(/\d+/g);
+				var bu_nId="#stoNo"+numArr[0];
+				$(bu_nId).attr("class","yellow");
+			}else{
+				var bu_nId="#stoN"+info;
+				$(bu_nId).attr("class","red");
+			}
+		}
+		//关闭WebSocket连接
+		function closeWebSocket() {
+			ws.close();
+		}
+		ws.connect("/localhost/websocket");// 后台接口地址
+	})
+	</script>
+	<!-- 禁止图片拖拽 -->
+	<script language="javascript">  
+	for(i in document.images)document.images[i].ondragstart=imgdragstart;  
+	</script>
+	</body>
+</html>
