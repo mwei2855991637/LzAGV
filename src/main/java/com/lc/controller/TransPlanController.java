@@ -68,12 +68,12 @@ public class TransPlanController {
 	private OtherService otherService;
 	@RequestMapping("index")
 	public String toindex() {
-		return "/plan/index";
+		return "plan/index";
 	}
 	
 	@RequestMapping("svg")
 	public String svg() {
-		return "/plan/svg";
+		return "plan/svg";
 	}
 	//故障测试
 	@RequestMapping("socketMsg")

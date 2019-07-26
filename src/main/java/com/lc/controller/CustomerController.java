@@ -102,7 +102,7 @@ public class CustomerController {
 	@RequestMapping("judgeVerificationIndex")
 	public String judgeVerificationIndex(Model model) {
 		model.addAttribute("msg", "请输入用户名完成验证");
-		return "/judgeVerification";
+		return "judgeVerification";
 	}
 	/**
 	 * 忘记密码->发送邮箱验证码
@@ -155,15 +155,15 @@ public class CustomerController {
 		if(session.getAttribute("verificationCode")==null){
 			model.addAttribute("currCust", currCustomer.getUsername());
 			model.addAttribute("msg", "您的验证码已失效！请重新发送邮箱！");
-			return "/judgeVerification";
+			return "judgeVerification";
 		}else {
 			if(verificationCode.equals(code)) {
 				//验证通过,调转重置界面
-				return "/restartPassword";
+				return "restartPassword";
 			}else {
 				model.addAttribute("currCust", currCustomer.getUsername());
 				model.addAttribute("msg", "您的验证码有误！请重新输入！");
-				return "/judgeVerification";
+				return "judgeVerification";
 			}
 		}
 	}
