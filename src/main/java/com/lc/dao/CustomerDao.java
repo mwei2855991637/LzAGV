@@ -17,7 +17,7 @@ public interface CustomerDao extends JpaRepository<Customer, Integer> {
 	Customer findByUsername(String username);
 	@Transactional
 	@Modifying
-	@Query("update Customer set password=?1 where username=?2")
+	@Query(value = "update Customer set password=?1 where username=?2",nativeQuery=true)
 	void updatePassWord(String username,String password);
 	
 }

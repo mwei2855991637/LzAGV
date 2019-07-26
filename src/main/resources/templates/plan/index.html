@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
+		<meta charset="utf-8" name="viewport" content="width=device-width,initial-scale=1.0">
 		<title>AGV中控显示平台</title>
 		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 		<script src="/static/js/bootstrap-3.3.7-dist/jquery/jquery.min.js"></script>
@@ -69,10 +69,6 @@
 	<style>
 
 #clock {
-
-  background: #0f3854;
-  background: -webkit-radial-gradient(center ellipse, #0a2e38 0%, #000000 70%);
-  background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
   background-size: 100%;
   font-family: 'Share Tech Mono', monospace;
   color: #ffffff;
@@ -138,16 +134,17 @@
 		</script> 
 	</head>
 	<body onLoad="initPieChart();form_query(1);">
-		<div class="container">
+		<div class="container" style="width: 90%;">
 	<div class="row clearfix">
-		<div class="col-md-12 column">
+		<div class="col-md-11 column">
 			<p class="text-success lead text-center">
-				 <strong>AGV中控显示平台</strong>
+				 <strong>AGV中控显示平台V1.0</strong>
+				 <span style="font-size: 14px">欢迎您！<th:block th:text="${session.customer.company}"></th:block></span><a href="/logout">[安全退出]</a>
 			</p>
 		</div>
 	</div>
 	<div class="row clearfix" style="background-color: #D0E9C6;">
-		<div class="col-md-3 column">
+		<div class="col-md-2 column">
 			<table class="table">
 				<tbody>
 					<tr>
@@ -202,23 +199,23 @@
 				</tbody>
 			</table>
 			<div id="clock">
-						    <p class="date">{{ date }}</p>
-						    <p class="time">{{ time }}</p>
-						</div>
+				    <p class="date">{{ date }}</p>
+				    <p class="time">{{ time }}</p>
+			</div>
 		</div>
-		<div class="col-md-5 column">
+		<div class="col-md-7 column">
 			<table class="table">
 				<tbody>
 					<tr>
 						<td class="text-success lead text-center">
-							异常警报
+							车辆实时路线
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<div style="background-color: #ffffff;width: 460px;height: 368px;">
-								<img src="/static/img/agv.png" style="width: 460px;height: 368px;" />
-								
+							<div style="width: 103%;height: 368px;"><!-- 
+								<img src="/static/img/agv.png" style="width: 460px;height: 368px;" /> -->
+								<iframe name="iframe" width=100% height=368 marginwidth=0 marginheight=0 src="/plan/svg"></iframe>
 							</div>
 						</td>
 					</tr>
@@ -226,7 +223,7 @@
 			</table>
 			
 		</div>
-		<div class="col-md-3 column">
+		<div class="col-md-2 column">
 			<table class="table">
 				<tbody>
 					<tr>
@@ -253,7 +250,7 @@
 						</td>
 						<td>
 							<button class="status-right" onclick="statistical()">
-								<img src="/static/img/statistical.png" style="width: 80px;height: 80px;" />
+								<img src="/static/img/statistical.png" style="width: 90%;height: 80px;" />
 								统计
 							</button>
 						</td>
@@ -261,7 +258,7 @@
 					<tr>
 						<td>
 							<button class="status-right">
-								<img src="/static/img/light_true.png" style="width: 80x;height: 80px;" />
+								<img src="/static/img/light_true.png" style="width: 90%;height: 80px;" />
 								库位闪灯
 							</button>
 						</td>
@@ -275,7 +272,7 @@
 						</td>
 						<td>
 							<button class="status-right" onclick="storage()">
-								<img src="/static/img/ku.png" style="width: 80x;height: 80px;" />
+								<img src="/static/img/ku.png" style="width: 90%;height: 80px;" />
 								库位详情
 							</button>
 						</td>
@@ -291,13 +288,13 @@
 						</td>
 						<td>
 							<button class="status-right" onclick="sendEmail()">
-								<img src="/static/img/email.png" style="width: 80px;height: 80px;" />
+								<img src="/static/img/email.png" style="width: 90%;height: 80px;" />
 								在线报障
 							</button>
 						</td>
 						<td>
 							<button class="status-right">
-								<img src="/static/img/map.png" style="width: 80px;height: 80px;" />
+								<img src="/static/img/map.png" style="width: 90%;height: 80px;" />
 								地表编号图
 							</button>
 						</td>
@@ -306,7 +303,7 @@
 			</table>
 		</div>
 		<div class="col-md-12 column">
-			<iframe name="iframe" width=100% height=300 marginwidth=0 marginheight=0 src="/plan/show" ></iframe>
+			<iframe name="iframe" width=100% height=420 marginwidth=0 marginheight=0 src="/plan/show" ></iframe>
 		</div>
 	</div>
 </div>
@@ -341,19 +338,28 @@
 		}
 	</script>
 	<script>
+	function openWin(url,name,iWidth,iHeight) { 
+        //获得窗口的垂直位置 
+        var iTop = (window.screen.availHeight - 30 - iHeight) / 2; 
+        //获得窗口的水平位置 
+        var iLeft = (window.screen.availWidth - 10 - iWidth) / 2; 
+        window.open(url, name, 'height=' + iHeight + ',innerHeight=' + iHeight + ',width=' + iWidth + ',innerWidth=' + iWidth + ',top=' + iTop + ',left=' + iLeft + ',status=no,toolbar=no,menubar=no,location=no,resizable=no,scrollbars=0,titlebar=no'); 
+    }
 		function statistical(){
-			window.open('/statistical', '', 'height=620, width=1024, top=50, left=180, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+			//window.open('/statistical', '', 'height=620, width=1024, top=50, left=180, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+			openWin('/statistical','',1024,620);
 		}
 		function storage(){
 			//window.open('/findStatus', '', 'height=530, width=1053, top=130, left=160, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
 			window.open('/findStatus');
 		}
 		function main(id,carId){
-			window.open('/product?id='+id+'&carId='+carId, '', 'height=372, width=735, top=222, left=336, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
-			//window.parent.open
+			//window.open('/product?id='+id+'&carId='+carId, '', 'height=372, width=735, top=222, left=336, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+			openWin('/product?id='+id+'&carId='+carId,'',735,372);
 		}
 		function sendEmail(){
-			window.open('/email', '', 'height=320, width=500, top=186, left=430, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+			//window.open('/email', '', 'height=320, width=500, top=186, left=430, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+			openWin('/email','',500,320);
 		}
 	</script>
 	<script type="text/javascript">
@@ -464,7 +470,7 @@
     };
     
     //屏蔽右键菜单，！验证
-   document.oncontextmenu = function(event) {
+    document.oncontextmenu = function(event) {
         if (window.event) {
             event = window.event;
         }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lc.bean.CurrStatus;
+import com.lc.bean.Customer;
 import com.lc.service.OtherService;
 import com.lc.util.EmailHelper;
 
@@ -28,8 +30,9 @@ public class OtherController {
 	}
 	
 	@RequestMapping("sendEmail")
-	public String email(HttpServletRequest req,String name,String title,String context,Model model) {
-	    int flag=EmailHelper.sendEmail(name, title, context);
+	public String email(HttpSession session,String name,String title,String context,Model model) {
+		Customer customer=(Customer)session.getAttribute("customer");
+	    int flag=EmailHelper.sendEmail("2260159110@qq.com", title, "来自( "+customer.getCompany()+" )的一份邮件，注意查收！"+context);
 		model.addAttribute("flag", flag);
 		return "plan/sendEmail";
 	}

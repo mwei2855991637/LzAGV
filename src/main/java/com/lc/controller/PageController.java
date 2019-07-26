@@ -10,14 +10,6 @@ public class PageController {
 		return "login";
 	}
 	/**
-	 * 	
-	 * @return 主界面
-	 */
-	@RequestMapping("/index")
-	public String index() {			
-		return "index";
-	}
-	/**
 	 * 	Test
 	 * @return 数据访问界面
 	 */

@@ -37,7 +37,7 @@ public class EmailHelper {
                 return new PasswordAuthentication(username,password);
             }
         };
-        Session session = Session.getDefaultInstance(props, authenticator);
+        Session session = Session.getInstance(props, authenticator);
         session.setDebug(true);
         Message message = new MimeMessage(session);
         try {

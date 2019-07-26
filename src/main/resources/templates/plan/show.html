@@ -50,12 +50,12 @@ ul li {
 		<div class='_outer' id="left" style="width:100%">
 			<div class="info">
 				<ul>
-					<li>小车型号</li>
-					<li>数量</li>
-					<li>起点</li>
-					<li>终点</li>
-					<li style="width:300px;">开始时间</li>
-					<li>货物信息</li>
+					<li style="width:250px">小车型号</li>
+					<li style="width:250px">运输数量</li>
+					<li style="width:250px">始发站</li>
+					<li style="width:250px">终点站</li>
+					<li style="width:250px;">开始时间</li>
+					<li style="width:250px">货物信息</li>
 				</ul>
 				<a style="padding-bottom:20px;text-align: center;" href="/plan/dateExcle">
 				<img src="/static/img/excel.png" style="padding-top:5px;width: 30px;height: 30px;" />
@@ -83,11 +83,11 @@ function product(id,carid){
 				var html = '<div id="' + info[0] + '" class="info"><ul>';
 				for (var i = 1; i < info.length - 2; i++) {
 					if(i==(info.length - 3)){
-						html += '<li  style="width:300px;">' + info[i] + '</li>';
-						html += '<li><a href="javascript:void(0);" onclick="product('+info[1]+','+info[i-1]+')"> 查看货物 </a></li>';
+						html += '<li  style="width:220px;">' + info[i] + '</li>';
+						html += '<li  style="width:310px"><a href="javascript:void(0);" onclick="product('+info[1]+','+info[i-1]+')"> 查看货物 </a></li>';
 					}
 					else if(i!=(info.length - 4)){
-						html += '<li>' + info[i] + '</li>';
+						html += '<li  style="width:250px">' + info[i] + '</li>';
 					}
 					
 				}

@@ -12,8 +12,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private CustomerDao dao;
 	//登录
 	@Override
-	public Customer login(String username, String password) {
-		return dao.login(username, password);
+	public Customer login(String username) {
+		return dao.findByUsername(username);
 	}
 	//注册
 	@Override
@@ -28,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
 	//更改用户密码
 	@Override
 	public void updatePassword(String username,String password) {
-
+		dao.updatePassWord(username, password);
 	}
 
 }

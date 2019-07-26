@@ -6,7 +6,7 @@ import com.lc.bean.Customer;
 @Service
 public interface CustomerService {
 	//登录
-	Customer login(String username,String password);
+	Customer login(String username);
 	//注册
 	void register(Customer customer);
 	//忘记密码->(验证用户，查看是否存在该用户);

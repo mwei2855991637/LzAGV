@@ -48,6 +48,10 @@ public class ProductController {
 		Integer pid=transPlanService.findByIdAndTime(id);
 		System.out.println("获取货物id:"+pid);
 		Product product=service.findById(pid);
+		if(product==null) {
+			model.addAttribute("product", -1);
+			return "plan/productDetails";
+		}
 		model.addAttribute("carId", id);
 		System.out.println(product);
 		model.addAttribute("product", product);

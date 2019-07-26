@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.persistence.Index;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -65,7 +66,15 @@ public class TransPlanController {
 	private StorageAutoService storageAutoService;
 	@Autowired
 	private OtherService otherService;
+	@RequestMapping("index")
+	public String toindex() {
+		return "/plan/index";
+	}
 	
+	@RequestMapping("svg")
+	public String svg() {
+		return "/plan/svg";
+	}
 	//故障测试
 	@RequestMapping("socketMsg")
 	public String socketMsg(String bid,@RequestParam(value = "status", defaultValue = "-1")Integer status) {
@@ -331,7 +340,7 @@ public class TransPlanController {
 	
 	
 	/**
-	 * 	添加定时任务，将昨天数据存入历史库，每天晚上00:00:00执行一次。
+	 * 	添加定时任务，将昨天数据存入历史库，每天晚上00:00:00执行一次。（考虑服务器不关闭的情况）
 	 */
     @Scheduled(cron = "0 0 0 * * ?")
     //或直接指定时间间隔
@@ -421,8 +430,8 @@ public class TransPlanController {
 					}
 				}
 			});
-			t1.start();
-			t2.start();
+//			t1.start();
+//			t2.start();
 		}
 		return "plan/show";
 	}

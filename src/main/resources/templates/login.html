@@ -23,11 +23,17 @@
 </head>
 
 <body>
-    <h1 class="title-agile text-center">欢迎登录AGV中控显示平台</h1>
+    <h1 class="title-agile text-center">欢迎登录AGV中控显示平台V1.0</h1>
     <div class="content-w3ls">
         <div class="agileits-grid">
             <div class="content-top-agile">
-                <h2>请输入账号与密码</h2>
+             <th:block th:if="${msg} eq null">
+                	<h2>请输入账号与密码</h2>
+                </th:block>
+                
+                <th:block th:if="${msg} ne null">
+                	<h2 style="color: red">对不起！您的账号或密码有误！</h2>
+                </th:block>
             </div>
             <div class="content-bottom">
                 <form action="login" method="post">
@@ -52,12 +58,12 @@
                             </label>
                         </li>
                         <li>
-                            <a href="#" class="text-right">忘记密码?</a>
+                            <a href="/judgeVerificationIndex" class="text-right" target="_blank">忘记密码?</a>
                         </li>
                         <li class="clearfix"></li>
                     </ul>
-                    <!-- 记住密码状态 0表示不记住密码,1表示记住密码 -->
-                    <input type="hidden" id="status" name="status" value="0">
+                    <!-- 记住密码状态 -1表示不记住密码,1表示记住密码 -->
+                    <input type="hidden" id="status" name="rememberMe" value="-1">
                 </form>
             </div>
         </div>
@@ -80,21 +86,21 @@
             }
         });
        function remember(){
-        	alert("当前状态："+st);
-        	if(st==0){
+    	   var st=$('#status').val();
+        	if(st==-1){
         		$('#status').val('1');
         	}else{
-        		$('#status').val('0');
+        		$('#status').val('-1');
         	}
         	
         }
        window.onload = function(){
    		var flag='[[${flag}]]';
    		if(flag=="error"){
-   			alert("登录失败，账号或密码错误！");
+   			webToast("登录失败，账号或密码错误！","middle",1000);
    		}
    		if(flag=="fail"){
-   			alert("请输入用户名！");
+   			webToast("用户名不能为空！","middle",1000);
    		}
        }
     </script>
