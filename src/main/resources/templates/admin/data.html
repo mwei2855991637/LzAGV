@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>统计今日车辆运输情况</title>
+<script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" href="/static/js/layui/css/layui.css">
+<!-- <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script> -->
+<script type="text/javascript" src="/static/js/echarts.min.js"></script>
+<script src="/static/js/layui/layui.js"></script>
+</head>
+<body onload="LoadEcharts()">
+<form class="layui-form layui-form-pane" name="form1">
+    <div class="layui-form-item" style="padding-top: 10px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">日期时间：</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="currTime" name="currTime" placeholder="yyyy-MM-dd">
+            </div>
+            <div class="layui-input-inline findByTime">
+                <a class="layui-btn" data-type="reload">查询</a>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/html" id="toolbarDemo">
+	<button class="layui-btn" lay-event="delSel">删除选中数据</button>
+	<button class="layui-btn" lay-event="delDay">删除今日数据</button>
+	<button class="layui-btn layui-btn-danger" lay-event="delAll">删除所有数据</button>
+</script>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+<div class="pngEcharts" style="width:99%;height:500px;" id="right"></div>
+ <script type="text/javascript">
+	  //表格重载
+function refresh(){
+  layui.table.reload('test', {
+      method: 'post'
+      , page: {
+          curr: 1
+      }
+  });
+}
+layui.use(['form', 'table','laydate'], function(){
+  var table = layui.table
+      ,form = layui.form;
+      laydate = layui.laydate;
+      //日期时间选择器
+      laydate.render({
+          elem: '#currTime'
+          ,type: 'date'
+      });
+
+  table.render({
+      elem: '#test'
+      ,height: 327 //容器高度
+      ,url:'/plan/testlayui'
+      ,toolbar: '#toolbarDemo'
+      ,title: '车辆信息表'
+      ,cols: [
+      	[
+      		{type: 'checkbox',align:'center', fixed: 'left'}
+           ,{field:'id',align:'center', title:'运输编号'}
+           ,{field:'carNum',align:'center', title:'小车型号'}
+           ,{field:'quantity',align:'center', title:'运输数量'}
+		   ,{field:'startPlace',align:'center', title:'起点'}
+		   ,{field:'endPlace',align:'center', title:'终点'}
+		   ,{field:'startTime',align:'center', title:'开始时间'}
+      ]
+      	]
+      ,page: true
+      ,limits:[5,15,30,50,100]
+      ,limit:5
+      ,id:'testReload'
+  });
+	//监听头工具栏
+  table.on('toolbar(test)', function(obj){
+    var data = obj.data;
+    var checkStatus = table.checkStatus(obj.config.id);
+    if(obj.event=='getCheckLength'){
+        var data = checkStatus.data;
+        var idss="";
+        for (var i = 0;i<data.length;i++){
+            idss+=data[i].detailid;
+            if (i<data.length-1){
+                idss+=',';
+            }
+        }
+        layer.confirm('确定删除？'+ data.length + '条内容？', function(index){
+            var $ = layui.jquery;
+            $.ajax({
+                url:"deletes_CarDetail",//提交地址
+                data:{ids:idss},//提交数据
+                type:'post',//默认get
+                success:function(data){
+                    if (data=="success"){
+                        layer.alert("删除成功！", {icon: 1});
+                        //表格重载
+                        refresh();
+                    }else{
+                        layer.alert("删除失败！", {icon: 2});
+                    }
+                }
+            });
+        });
+    }else if(obj.event === 'delDay'){
+      layer.confirm('真的删除今日数据？', function(index){
+        
+      });
+    } else if(obj.event === 'delAll'){
+    	 layer.confirm('真的删除所有数据？', function(index){
+    		 layer.confirm('请再次点击确认？', function(index){
+ 	 	        
+ 	 	      });
+ 	      });
+    } 
+  });
+  	var $ = layui.$, active = {
+          reload: function () {
+        	  LoadEcharts();
+              var currTime = $('#currTime');//时间日期
+              //执行重载
+              table.reload('testReload', {
+                  page: {
+                      curr: 1 //重新从第 1 页开始
+                      , limit: 5
+                  }
+                  , where: {
+                      currTime: currTime.val(),
+                  }
+              });
+          }
+      };
+	  $('.findByTime .layui-btn').on('click', function(){
+	      var type = $(this).data('type');
+	      active[type] ? active[type].call(this) : '';
+	  });
+		
+});
+function LoadEcharts(){
+	var theme = {
+			// 默认色板
+			color: [
+			'green', '#68a54a', '#a9cba2', '#86b379',
+			'#397b29', '#8abb6f', '#759c6a', '#bfd3b7'
+			]};
+    //获取dom容器
+    var myChart = echarts.init(document.getElementById('right'), theme);
+    myChart.clear();
+    echartsTest();
+    myChart.showLoading();
+    function echartsTest(){
+    	myChart.setOption( {
+            title : {
+                text: '统计运输次数'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['车辆编号']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line','bar']},
+                    //restore : {show: true},//刷新
+                    myTool : {
+                        show : true,
+                        title : '刷新',
+                        icon : 'image:///static/img/icon/re.png',
+                        onclick : function (){
+                        	echartsTest();
+                        }
+                    },
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : []
+                }
+            ],
+            yAxis : [
+                {
+                	type : 'value',
+                }
+            ],
+            series : [
+                {
+                    name:'运输次数',
+                    type:'line',
+                    data:[]
+                }
+            ]
+        });
+    	var names=[];    //类别数组（实际用来盛放X轴坐标值）
+        var nums=[];    //销量数组（实际用来盛放Y坐标值）
+        var currTime1=$("#currTime").val();
+    	 $.ajax({
+             type : "post",
+             async : true,            	//异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+             url : "/plan/testEcharts",    //请求发送到Controller处
+             data : {currTime:currTime1},
+             dataType : "json",        //返回数据形式为json
+             success : function(result) {
+             	console.log("获取长度："+result.y.length);
+             	console.log("获取长度："+result.x.length);
+             	
+                 //请求成功时执行该函数内容，result即为服务器返回的json对象
+                 if (result) {
+                        for(var i=0;i<result.x.length;i++){
+                            names.push(result.x[i]);    //挨个取出类别并填入X轴
+                         }
+                        for(var i=0;i<result.y.length;i++){
+                            nums.push(result.y[i]);    //挨个取出并填入Y轴
+                          }
+                        myChart.hideLoading();    //隐藏加载动画
+                        myChart.setOption({        //加载数据图表
+                            xAxis: {
+                                data: names
+                            },
+                            series: [{
+                                // 根据名字对应到相应的系列
+                                name: '运输次数',
+                                data: nums,
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            }]
+                        });
+                 }
+            },
+             error : function(errorMsg) {
+             //请求失败时执行该函数
+             alert("查询无数据！若需恢复数据，请联系相关管理员");
+             myChart.hideLoading();
+             }
+             });  
+    }
+}
+</script>
+</body>
+</html>
