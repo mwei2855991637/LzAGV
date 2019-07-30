@@ -59,9 +59,10 @@ public class CustomerController {
 	        
 	        session.setAttribute("customer", customer);
 	        System.out.println("登录成功！");
-	        SavedRequest savedRequest=WebUtils.getSavedRequest(request);//通过shiro获取登录之前的路径
-	        if(null!=savedRequest){
-	            return "redirect:" + savedRequest.getRequestUrl();
+	        //SavedRequest savedRequest=WebUtils.getSavedRequest(request);//通过shiro获取登录之前的路径
+	        if(customer.getPower()==0){
+	        	return "redirect:/statistical_admin";
+	        	//return "redirect:" + savedRequest.getRequestUrl();
 	        }else {
 	        	return "redirect:/plan/index";
 	        }

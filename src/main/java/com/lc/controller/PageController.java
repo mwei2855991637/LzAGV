@@ -32,6 +32,11 @@ public class PageController {
 		return "plan/statistical";
 	}
 	
+	@RequestMapping("/statistical_admin")
+	public String statistical_admin() {
+		return "admin/data";
+	}
+	
 	@RequestMapping("/storageTest")
 	public String storageTest() {
 		return "plan/storageTest";
