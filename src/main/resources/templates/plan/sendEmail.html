@@ -27,7 +27,7 @@
     <div class="content-box-content">
         <div class="tab-content default-tab" id="form">
             <div>
-				<form class="layui-form layui-form-pane" action="/sendEmail" method="post" onsubmit="send()">
+				<form class="layui-form layui-form-pane" action="/sendEmail" method="post" id="form1">
 					<div class="layui-form-item" style="width: 100%">
 						<div class="layui-form-item" style="padding-left: 40px">
 							
@@ -40,18 +40,18 @@
 							<div class="layui-form-item">
 								<label class="layui-form-label"  style="width:130px;">标题：</label>
 								<div class="layui-input-inline">
-									<input type="text" class="layui-input" name="title">
+									<input type="text" class="layui-input" name="title" id="title">
 								</div>
 							</div>
 							<div class="layui-form-item">
 								<label class="layui-form-label"  style="width:130px;">问题描述：</label>
 								<div class="layui-input-inline">
-									<textarea name="context" style="width:187px;height:100px"></textarea>
+									<textarea name="context" id="context" style="width:187px;height:100px"></textarea>
 								</div>
 							</div>
 							<div class="layui-form-item" id="info">
 								<div class="layui-input-inline"  style="width:131px;">
-									<input type="submit" class="layui-input" value="发送">
+									<input type="button" onclick="sendmail()" class="layui-input" value="发送"/>
 								</div>
 							</div>
 						</div></div>
@@ -60,10 +60,6 @@
             </div></div></div>
 </body>
 <script>
-function send(){
-	webToast("邮件正在发送，请稍等。。。","middle",4000);
-	return true;
-}
 	window.onload = function(){
 		var flag=[[${flag}]]
 		if(flag==1){
@@ -73,5 +69,17 @@ function send(){
 			alert("邮件发送失败！（请保持网络畅通，收件人地址是否有误！）");
 		}
     }
+</script>
+<script type="text/javascript">
+function sendmail(){
+	if($('#title').val()==null||$('#title').val()==""){
+		alert("标题不能为空！");
+	}else if($('#context').val()==null||$('#context').val()==""){
+		alert("内容不能为空！");
+	}else{
+		webToast("邮件正在发送，请稍等。。。","middle",2000);
+		$("#form1").submit();
+	}
+}
 </script>
 </html>

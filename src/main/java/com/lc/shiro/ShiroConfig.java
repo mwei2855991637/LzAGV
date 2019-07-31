@@ -39,7 +39,8 @@ public class ShiroConfig {
 		filterMap.put("/carstatus", "authc");
 		filterMap.put("/email", "authc");
 		filterMap.put("/cargo", "authc");
-		filterMap.put("/login", "anon");
+		filterMap.put("/cargo", "authc");
+		filterMap.put("/statistical_admin", "authc");
 		filterMap.put("/logout", "logout");//安全退出
 		shiroFilterFactoryBean.setLoginUrl("/");
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);

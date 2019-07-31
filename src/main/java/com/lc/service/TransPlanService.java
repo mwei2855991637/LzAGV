@@ -31,4 +31,11 @@ public interface TransPlanService {
 	//分页查询小车数据
 	List<TransportPlan> findAllLimit(String time,Pageable pageable);
 	
+	//删除选中数据
+	void delSel(String ids);
+	//删除今日数据
+	void delDay(String time1,String time2);
+	//删除全部数据
+	void delAll();
+	
 }

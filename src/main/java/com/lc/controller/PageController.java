@@ -1,7 +1,11 @@
 package com.lc.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.lc.bean.Customer;
 @Controller
 public class PageController {
 	
@@ -33,8 +37,17 @@ public class PageController {
 	}
 	
 	@RequestMapping("/statistical_admin")
-	public String statistical_admin() {
-		return "admin/data";
+	public String statistical_admin(HttpSession session) {
+		Customer customer=(Customer)session.getAttribute("customer");
+		if(customer==null) {
+			return "redirect:/plan/index";
+		}else {
+		 if(customer.getPower()==0){
+			 	return "admin/data";
+	        }else {
+	        	return "redirect:/plan/index";
+	        }
+		}
 	}
 	
 	@RequestMapping("/storageTest")

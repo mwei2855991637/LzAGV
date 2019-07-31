@@ -139,7 +139,7 @@
 		<div class="col-md-11 column">
 			<p class="text-success lead text-center">
 				 <strong>AGV中控显示平台V1.0</strong>
-				 <span style="font-size: 14px">欢迎您！<th:block th:text="${session.customer.company}"></th:block></span><a href="/logout">[安全退出]</a>
+				 <span style="font-size: 14px">欢迎您！<th:block th:text="${session.customer.company}"></th:block></span><a href="/logout">[安全退出]</a><th:block th:if="${session.customer.power} == 0"><a href="/statistical_admin">[数据管理]</a></th:block>
 			</p>
 		</div>
 	</div>

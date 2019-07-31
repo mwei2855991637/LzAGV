@@ -56,7 +56,6 @@ public class CustomerController {
 			subject.login(token);
 			//获取已登录的用户信息
 	        Customer customer = (Customer) subject.getPrincipal();
-	        
 	        session.setAttribute("customer", customer);
 	        System.out.println("登录成功！");
 	        //SavedRequest savedRequest=WebUtils.getSavedRequest(request);//通过shiro获取登录之前的路径

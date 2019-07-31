@@ -62,4 +62,20 @@ public class TransPlanServiceImpl implements TransPlanService {
 		return dao.findAllLimit(time+" 00:00:00",time+" 23:59:59",pageable);
 	}
 	
+	//删除选中数据
+	@Override
+	public void delSel(String ids) {
+		dao.delSel(ids);
+	}
+	//删除今日数据
+	@Override
+	public void delDay(String time1, String time2) {
+		dao.delDay(time1, time2);
+	}
+	//删除所有数据
+	@Override
+	public void delAll() {
+		dao.delAll();
+	}
+	
 }

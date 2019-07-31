@@ -201,11 +201,9 @@ public class TransPlanController {
 		Pageable pageable=new PageRequest(page, limit);
 		List<TransportPlan> list=null;
 		List<HisTransport> hisList=null;
-		if(currTime.equals("-1")) {
+		if(currTime.equals("-1")||GetTimestamp.getTimestamp().equals(currTime)) {
 			list=service.findAllLimit(GetTimestamp.getTimestamp(),pageable);
-		}
-		//时间成立
-		if(!currTime.equals("-1")) {
+		}else {
 			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 			Map<String, Object> map=new HashMap<String, Object>();
 			Integer count=0;
@@ -236,7 +234,7 @@ public class TransPlanController {
 		return map;
 	}
 	/**
-	 * 	测试Echarts图表
+	 * 	Echarts图表
 	 * @return Json
 	 */
 	@ResponseBody
@@ -250,7 +248,8 @@ public class TransPlanController {
 		List<TransportPlan> list=null;
 		List<HisTransport> hisList=null;
 		List<String> car_num=null;
-		if(currTime.equals("-1")) {
+		//今日数据
+		if(currTime.equals("-1")||GetTimestamp.getTimestamp().equals(currTime)) {
 			list=service.findAllWhereCurrTime(GetTimestamp.getTimestamp());
 			car_num=service.findGroup(GetTimestamp.getTimestamp());
 			for (String num : car_num) {
@@ -263,10 +262,8 @@ public class TransPlanController {
 				Carcount.add(count);
 				CarNumcount.add(num);
 			}
-		}
-		
-		//时间成立
-		if(!currTime.equals("-1")) {
+		}else{
+			//历史记录
 			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 			try {
 				Date begin = fmt.parse(GetTimestamp.getTimestamp());

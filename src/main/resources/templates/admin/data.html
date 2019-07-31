@@ -18,8 +18,11 @@
                 <input type="text" class="layui-input" id="currTime" name="currTime" placeholder="yyyy-MM-dd">
             </div>
             <div class="layui-input-inline findByTime">
-                <a class="layui-btn" data-type="reload">查询</a>
+                <a class="layui-btn" data-type="reload">查询</a><a class="layui-btn" href="/plan/index">首页</a>
             </div>
+            <div style="text-align: left;font-size: 25px">
+	             <strong style="color:green; ">AGV后台数据管理平台V1.0</strong><span style="font-size: 14px;color: red">欢迎您！<th:block th:text="${session.customer.company}"></th:block>管理员</span><a href="/logout">[安全退出]</a>
+       		</div>
         </div>
     </div>
 </form>
@@ -33,7 +36,7 @@
  <script type="text/javascript">
 	  //表格重载
 function refresh(){
-  layui.table.reload('test', {
+  layui.table.reload('testReload', {
       method: 'post'
       , page: {
           curr: 1
@@ -59,7 +62,7 @@ layui.use(['form', 'table','laydate'], function(){
       ,cols: [
       	[
       		{type: 'checkbox',align:'center', fixed: 'left'}
-           ,{field:'id',align:'center', title:'运输编号'}
+           ,{field:'id',align:'center', title:'运输编号',unresize: true}
            ,{field:'carNum',align:'center', title:'小车型号'}
            ,{field:'quantity',align:'center', title:'运输数量'}
 		   ,{field:'startPlace',align:'center', title:'起点'}
@@ -74,42 +77,62 @@ layui.use(['form', 'table','laydate'], function(){
   });
 	//监听头工具栏
   table.on('toolbar(test)', function(obj){
-    var data = obj.data;
     var checkStatus = table.checkStatus(obj.config.id);
-    if(obj.event=='getCheckLength'){
+    if(obj.event=='delSel'){
         var data = checkStatus.data;
         var idss="";
         for (var i = 0;i<data.length;i++){
-            idss+=data[i].detailid;
+            idss+=data[i].id;
             if (i<data.length-1){
                 idss+=',';
             }
         }
         layer.confirm('确定删除？'+ data.length + '条内容？', function(index){
             var $ = layui.jquery;
+            layer.msg("正在删除，请等待...");
             $.ajax({
-                url:"deletes_CarDetail",//提交地址
+                url:"/delSel",//提交地址
                 data:{ids:idss},//提交数据
                 type:'post',//默认get
                 success:function(data){
-                    if (data=="success"){
-                        layer.alert("删除成功！", {icon: 1});
-                        //表格重载
-                        refresh();
-                    }else{
-                        layer.alert("删除失败！", {icon: 2});
-                    }
+                    layer.alert("删除成功！", {icon: 1});
+                    //表格重载
+                    refresh();
                 }
             });
         });
     }else if(obj.event === 'delDay'){
-      layer.confirm('真的删除今日数据？', function(index){
-        
+      layer.confirm('真的要删除今日数据？', function(index){
+    	  layer.confirm('请再次点击确认？', function(index){
+    		  var $ = layui.jquery;
+    		  layer.msg("正在删除，请等待...");
+              $.ajax({
+                  url:"/delDay",//提交地址
+                  data:{},//提交数据
+                  type:'post',//默认get
+                  success:function(data){
+                     layer.alert("删除今日数据成功！", {icon: 1});
+                     //表格重载
+                     refresh();
+                  }
+              });
+	 	      });
       });
     } else if(obj.event === 'delAll'){
-    	 layer.confirm('真的删除所有数据？', function(index){
+    	 layer.confirm('真的要删除所有数据？数据无价,谨慎操作!', function(index){
     		 layer.confirm('请再次点击确认？', function(index){
- 	 	        
+    			 var $ = layui.jquery;
+    			 layer.msg("正在删除所有数据，因数据量庞大，时间可能漫长，请耐心等待...");
+                 $.ajax({
+                     url:"/delAll",//提交地址
+                     data:{},//提交数据
+                     type:'post',//默认get
+                     success:function(data){
+                         layer.alert("删除所有数据成功！", {icon: 1});
+                         //表格重载
+                         refresh();
+                     }
+                 });
  	 	      });
  	      });
     } 
@@ -207,8 +230,6 @@ function LoadEcharts(){
              data : {currTime:currTime1},
              dataType : "json",        //返回数据形式为json
              success : function(result) {
-             	console.log("获取长度："+result.y.length);
-             	console.log("获取长度："+result.x.length);
              	
                  //请求成功时执行该函数内容，result即为服务器返回的json对象
                  if (result) {
@@ -244,7 +265,8 @@ function LoadEcharts(){
             },
              error : function(errorMsg) {
              //请求失败时执行该函数
-             alert("查询无数据！若需恢复数据，请联系相关管理员");
+             alert("登录已过期！请重新登录");
+             window.location.href="/";
              myChart.hideLoading();
              }
              });  

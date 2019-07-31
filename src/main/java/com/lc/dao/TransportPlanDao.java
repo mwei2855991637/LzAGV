@@ -46,4 +46,20 @@ public interface TransportPlanDao extends JpaRepository<TransportPlan, Integer> 
 	@Query("select h from TransportPlan h where end_time between ?1 and ?2")
 	List<TransportPlan> findAllLimit(String end_time1,String end_time,Pageable pageable);
 	
+	
+	@Transactional
+	@Modifying
+	@Query(value = "delete from t_transport_plan where FIND_IN_SET(id,?)",nativeQuery=true)
+	void delSel(String ids);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "delete from t_transport_plan where end_time between ? and ?",nativeQuery=true)
+	void delDay(String time1,String time2);
+	
+	@Transactional
+	@Modifying
+	@Query("delete from TransportPlan")
+	void delAll();
+	
 }
