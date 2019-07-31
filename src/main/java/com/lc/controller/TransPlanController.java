@@ -198,7 +198,7 @@ public class TransPlanController {
 	@ResponseBody
 	@RequestMapping("testlayui")
 	public Map<String, Object> Test_layui(@RequestParam(value = "currTime", defaultValue = "-1") String currTime,@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "limit", defaultValue = "5")int limit) {
-		Pageable pageable=new PageRequest(page, limit);
+		Pageable pageable=new PageRequest(page-1, limit);
 		List<TransportPlan> list=null;
 		List<HisTransport> hisList=null;
 		if(currTime.equals("-1")||GetTimestamp.getTimestamp().equals(currTime)) {
@@ -211,6 +211,7 @@ public class TransPlanController {
 				Date begin = fmt.parse(GetTimestamp.getTimestamp());
 				Date end = fmt.parse(currTime); //结束日期
 				count=hisTransportService.findAllWhereCurrTime(currTime).size();
+				System.out.println("输出count："+count);
 				if(end.before(begin)) {
 					hisList=hisTransportService.findAllLimit(currTime,pageable);
 					map.put("data", hisList);
@@ -227,6 +228,7 @@ public class TransPlanController {
 		}
 		
 		Integer count=service.findAllWhereCurrTime(GetTimestamp.getTimestamp()).size();
+		System.out.println("输出count："+count);
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("code", 0);
 		map.put("count", count);

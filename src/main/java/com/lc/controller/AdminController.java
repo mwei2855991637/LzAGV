@@ -29,7 +29,7 @@ public class AdminController {
 	@Autowired
 	private TransPlanService transPlanService;
 	//记录管理员删除数据的操作
-	private String logpath="E:/del.log";
+	private String logpath="C:/del.log";
 	//删除选中数据
 	@RequestMapping("delSel")
 	public Map<String, Object> delSel(HttpSession session,String ids){
