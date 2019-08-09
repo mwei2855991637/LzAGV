@@ -80,16 +80,20 @@ function product(id,carid){
 			console.log(!ex.test(info) + " | " + info)
 			if (!ex.test(info)) { // 添加记录
 				info = JSON.parse(info);
+				console.log(info);
 				var html = '<div id="' + info[0] + '" class="info"><ul>';
 				for (var i = 1; i < info.length - 2; i++) {
-					if(i==(info.length - 3)){
-						html += '<li  style="width:220px;">' + info[i] + '</li>';
-						html += '<li  style="width:310px"><a href="javascript:void(0);" onclick="product('+info[1]+','+info[i-1]+')"> 查看货物 </a></li>';
+					if(i==1){
+						html += '<li  style="width:250px">' + info[i+4] + '</li>';
+					}else{
+						if(i==(info.length - 3)){
+							html += '<li  style="width:220px;">' + info[i] + '</li>';
+							html += '<li  style="width:310px"><a href="javascript:void(0);" onclick="product('+info[1]+','+info[i-1]+')"> 查看货物 </a></li>';
+						}
+						else if(i!=(info.length - 4)){
+							html += '<li  style="width:250px">' + info[i] + '</li>';
+						}
 					}
-					else if(i!=(info.length - 4)){
-						html += '<li  style="width:250px">' + info[i] + '</li>';
-					}
-					
 				}
 				html += '</ul><div>';
 				$('._outer').append(html);
@@ -101,7 +105,7 @@ function product(id,carid){
 		function closeWebSocket() {
 			ws.close();
 		}
-		ws.connect("/localhost:8080/websocket");// 后台接口地址
+		ws.connect("/192.168.1.116:80/websocket");// 后台接口地址
 	})
 	
 </script>

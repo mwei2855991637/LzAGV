@@ -31,6 +31,11 @@
 	<button class="layui-btn" lay-event="delDay">删除今日数据</button>
 	<button class="layui-btn layui-btn-danger" lay-event="delAll">删除所有数据</button>
 </script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="Sel">查看货物</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除该行</a>
+             
+</script>
 <table class="layui-hide" id="test" lay-filter="test"></table>
 <div class="pngEcharts" style="width:99%;height:500px;" id="right"></div>
  <script type="text/javascript">
@@ -68,6 +73,7 @@ layui.use(['form', 'table','laydate'], function(){
 		   ,{field:'startPlace',align:'center', title:'起点'}
 		   ,{field:'endPlace',align:'center', title:'终点'}
 		   ,{field:'startTime',align:'center', title:'开始时间'}
+		   ,{fixed: 'right',align:'center', title:'操作', toolbar: '#barDemo',width:170}
       ]
       	]
       ,page: true
@@ -136,6 +142,34 @@ layui.use(['form', 'table','laydate'], function(){
  	 	      });
  	      });
     } 
+  });
+//监听行工具事件
+  table.on('tool(test)', function(obj){
+      var data = obj.data;
+      //console.log(obj)
+
+      if(obj.event === 'del'){
+          layer.confirm('确定删除？', function(index){
+              var $ = layui.jquery;
+               $.ajax({
+                  url:"/delSel",//提交地址
+                  data:{ids:data.id},//提交数据
+                  type:'post',//默认get
+                  success:function(data){
+                      layer.alert("删除成功！", {icon: 1});
+                      //表格重载
+                      refresh();
+                  }
+              }); 
+          });
+      } else if(obj.event === 'Sel'){
+          layer.open({
+              type:2,
+              title:"查看货物信息",
+              area:['735px','372px'],
+              content:'/product?id='+data.product+'&carId='+data.carNum
+          })
+      }
   });
   	var $ = layui.$, active = {
           reload: function () {

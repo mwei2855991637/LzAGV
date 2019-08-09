@@ -253,17 +253,21 @@ public class TransPlanController {
 		//今日数据
 		if(currTime.equals("-1")||GetTimestamp.getTimestamp().equals(currTime)) {
 			list=service.findAllWhereCurrTime(GetTimestamp.getTimestamp());
-			car_num=service.findGroup(GetTimestamp.getTimestamp());
-			for (String num : car_num) {
-				int count=0;
-				for (TransportPlan Transport : list) {
-					if(num.equals(Transport.getCarNum())) {
-						count++;
+			System.out.println("得到list"+list);
+			if(list!=null) {
+				car_num=service.findGroup(GetTimestamp.getTimestamp());
+				for (String num : car_num) {
+					int count=0;
+					for (TransportPlan Transport : list) {
+						if(num.equals(Transport.getCarNum())) {
+							count++;
+						}
 					}
+					Carcount.add(count);
+					CarNumcount.add(num);
 				}
-				Carcount.add(count);
-				CarNumcount.add(num);
 			}
+		
 		}else{
 			//历史记录
 			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -272,6 +276,7 @@ public class TransPlanController {
 				Date end = fmt.parse(currTime); //结束日期
 				if(end.before(begin)) {
 					hisList=hisTransportService.findAllWhereCurrTime(currTime);
+					if(hisList!=null) {
 					car_num=hisTransportService.findGroup(currTime);
 					for (String num : car_num) {
 						int count=0;
@@ -283,8 +288,10 @@ public class TransPlanController {
 						Carcount.add(count);
 						CarNumcount.add(num);
 					}
+					}
 				}else {
 					list=service.findAllWhereCurrTime(currTime);
+					if(list!=null) {
 					car_num=service.findGroup(currTime);
 					for (String num : car_num) {
 						int count=0;
@@ -296,7 +303,7 @@ public class TransPlanController {
 						Carcount.add(count);
 						CarNumcount.add(num);
 					}
-					
+				}
 				}
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -399,14 +406,15 @@ public class TransPlanController {
 				TransportPlan tPlan;
 				Random random = new Random();
 				while (true) {
-					tPlan = service.save(new TransportPlan("1", random.nextInt(20), String.valueOf((char) random.nextInt(100)), "p2", "2",GetTimestamp.getDateTimestamp(),GetTimestamp.getDateTimestamp()));
+					String carNum=random.nextInt(7)+1+"";
+					tPlan = service.save(new TransportPlan("1", random.nextInt(20), String.valueOf((char) random.nextInt(100)), "p2", carNum,GetTimestamp.getDateTimestamp(),GetTimestamp.getDateTimestamp()));
 					String json = getTransportFieldsToJson(tPlan);
 					synchronized (ids) {
 						ids.add(tPlan.getId());
 						WebSocket.webSockets.forEach(obj -> obj.sendToCurr(json));
 					}
 					try {
-						Thread.sleep(1500);
+						Thread.sleep(2500);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -423,14 +431,14 @@ public class TransPlanController {
 						ids.clear();
 					}
 					try {
-						Thread.sleep(8000);
+						Thread.sleep(20000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
 			});
-//			t1.start();
-//			t2.start();
+			t1.start();
+			t2.start();
 		}
 		return "plan/show";
 	}

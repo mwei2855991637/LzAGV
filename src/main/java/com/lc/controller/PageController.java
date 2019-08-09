@@ -55,5 +55,9 @@ public class PageController {
 		return "plan/storageTest";
 	}
 	
+	@RequestMapping("/left")
+	public String left() {
+		return "plan/left";
+	}
 	
 }

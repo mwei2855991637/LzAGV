@@ -28,6 +28,7 @@ public class ProductController {
 	 */
 	@RequestMapping("product")
 	public String findById(@RequestParam(value = "id", defaultValue = "0")Integer id,String carId,Model model) {
+		System.out.println("获取id"+id+"\t得到carid"+carId);
 		if(id==0) {
 			model.addAttribute("product", -1);
 			return "plan/productDetails";
